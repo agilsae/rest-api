@@ -19,7 +19,7 @@ exports.tampilSemuaMahasiswa = function(req, res){
 }
 
 exports.tampilMahasiswaByID = function(req, res){
-    let id = req.params.id
+    let id_mahasiswa = req.params.id_mahasiswa
     connection.query('SELECT * FROM mahasiswa WHERE id_mahasiswa = ?', [id],
         function(error, rows, fields){
             if(error){
@@ -51,12 +51,12 @@ exports.tambahMahasiswa = function(req, res){
 
 //update data mahasiswa
 exports.updateMahasiswa = function(req, res){
-    var id = req.body.id
+    var id_mahasiswa = req.body.id_mahasiswa
     var nim = req.body.nim
     var nama = req.body.nama
     var jurusan = req.body.jurusan
 
-    connection.query(`UPDATE mahasiswa SET nim = '${nim}', nama = '${nama}', jurusan = '${jurusan}' WHERE id_mahasiswa = ${id}`,
+    connection.query(`UPDATE mahasiswa SET nim = '${nim}', nama = '${nama}', jurusan = '${jurusan}' WHERE id_mahasiswa = ${id_mahasiswa}`,
         function(error, rows, fields){
             if(error){
                 console.log(error)
@@ -69,9 +69,9 @@ exports.updateMahasiswa = function(req, res){
 
 //hapus data mahasiswa
 exports.deleteMahasiswa = function(req, res){
-    var id = req.body.id
+    var id_mahasiswa = req.body.id_mahasiswa
 
-    connection.query(`DELETE FROM mahasiswa WHERE id_mahasiswa = ${id}`,
+    connection.query(`DELETE FROM mahasiswa WHERE id_mahasiswa = ${id_mahasiswa}`,
     function(error, rows, fields){
         if(error){
             console.log(error)
@@ -79,4 +79,26 @@ exports.deleteMahasiswa = function(req, res){
             response.ok(rows.affectedRows +'record(s) deleted', res)
         }
     })
+}
+
+//tampilkan matakuliah group
+exports.tampilGroupMatakuliah = function (req, res){
+    connection.query(`SELECT 
+    a.id_mahasiswa,
+    a.nim,
+    a.nama,
+    a.jurusan,
+    c.matakuliah,
+    c.sks
+   FROM mahasiswa a
+   JOIN krs b ON a.id_mahasiswa = b.id_mahasiswa
+   JOIN matakuliah c ON b.id_matakuliah = c.id_matakuliah`,
+    function(error, rows, fields){
+        if(error){
+            console.log(error)
+        }else{
+            response.oknested(rows, res)
+        }
+    }
+   )
 }
