@@ -48,3 +48,35 @@ exports.tambahMahasiswa = function(req, res){
         }
     )    
 }
+
+//update data mahasiswa
+exports.updateMahasiswa = function(req, res){
+    var id = req.body.id
+    var nim = req.body.nim
+    var nama = req.body.nama
+    var jurusan = req.body.jurusan
+
+    connection.query(`UPDATE mahasiswa SET nim = '${nim}', nama = '${nama}', jurusan = '${jurusan}' WHERE id_mahasiswa = ${id}`,
+        function(error, rows, fields){
+            if(error){
+                console.log(error)
+            }else{
+                response.ok(rows.affectedRows + 'record(s) updated', res)
+            }
+        }   
+    )
+}
+
+//hapus data mahasiswa
+exports.deleteMahasiswa = function(req, res){
+    var id = req.body.id
+
+    connection.query(`DELETE FROM mahasiswa WHERE id_mahasiswa = ${id}`,
+    function(error, rows, fields){
+        if(error){
+            console.log(error)
+        }else{
+            response.ok(rows.affectedRows +'record(s) deleted', res)
+        }
+    })
+}
